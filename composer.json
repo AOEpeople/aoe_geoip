@@ -1,0 +1,29 @@
+{
+  "name": "aoe/geoip",
+  "description": "Detect client location",
+  "type": "typo3-cms-extension",
+  "license": "GPL-3.0",
+  "authors": [
+    {
+      "name": "Dragan Tomic",
+      "email": "dragan.tomic@aoe.com"
+    },
+    {
+      "name": "Marko Milojevic",
+      "email": "marko.milojevic@aoe.com"
+    }
+  ],
+  "require": {
+    "php": ">=5.5.0",
+    "typo3/cms": ">=7.0,<8.0",
+    "maxmind-db/reader": ">=v1.1.3"
+  },
+  "require-dev": {
+    "phpunit/phpunit": ">=5.7."
+  },
+  "autoload": {
+    "psr-4": {
+      "Aoe\\GeoIp\\": "Classes/"
+    }
+  }
+}
