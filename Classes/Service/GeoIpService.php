@@ -26,6 +26,7 @@ namespace Aoe\GeoIp\Service;
  ***************************************************************/
 
 use Aoe\GeoIp\Domain\Model\Country;
+use Aoe\GeoIp\TYPO3\Configuration\ExtensionConfiguration;
 use MaxMind\Db\Reader;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
@@ -37,10 +38,28 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class GeoIpService
 {
 
+    const GEO_IP_USER_OVERRIDE = 'GEO_IP_USER_OVERRIDE';
+
     /**
      * @var Reader
      */
     private $reader = null;
+
+    /**
+     * @var ExtensionConfiguration
+     */
+    private $configuration = null;
+
+    /**
+     * GeoIpService constructor.
+     *
+     * Adds an instance of eftension configuration.
+     */
+    public function __construct()
+    {
+        $objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
+        $this->configuration = $objectManager->get('Aoe\\GeoIp\\TYPO3\\Configuration\\ExtensionConfiguration');
+    }
 
     /**
      * Returns country that corresponds to the client's IP address.
@@ -49,8 +68,8 @@ class GeoIpService
      */
     public function getCountry()
     {
-        $ip_address = $this->getIpAddress();
-        $record = $this->getReader()->get($ip_address);
+        $ipAddress = $this->getIpAddress();
+        $record = $this->getReader()->get($ipAddress);
         if (is_array($record)) {
             return new Country($record);
         }
@@ -65,7 +84,8 @@ class GeoIpService
     private function getReader()
     {
         if (null === $this->reader) {
-            $fileLocation = GeneralUtility::getFileAbsFileName('EXT:aoe_geoip/Resources/Private/GeoIpDB/GeoLite2-Country.mmdb');
+            $fileLocation = 'EXT:aoe_geoip/Resources/Private/GeoIpDB/GeoLite2-Country.mmdb';
+            $fileLocation = GeneralUtility::getFileAbsFileName($fileLocation);
             $this->reader = new Reader($fileLocation);
         }
         return $this->reader;
@@ -78,9 +98,20 @@ class GeoIpService
      */
     private function getIpAddress()
     {
-        if (isset($_COOKIE['TEST_IP'])) {
-            return $_COOKIE['TEST_IP'];
+        $ipAddressFromCookie = $this->getIpAddressFromCookie();
+        if ($this->configuration->isTestWithCookies() && !empty($ipAddressFromCookie)) {
+            return $ipAddressFromCookie;
         }
         return GeneralUtility::getIndpEnv('REMOTE_ADDR');
+    }
+
+    /**
+     * Returns IP address override from cookie.
+     *
+     * @return string/null
+     */
+    private function getIpAddressFromCookie()
+    {
+        return $_COOKIE[self::GEO_IP_USER_OVERRIDE];
     }
 }

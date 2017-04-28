@@ -1,0 +1,2 @@
+# cat=basic//10; type=boolean; label= Test with cookies: If it's checked, it's allowed to use cookie ("GEO_IP_USER_OVERRIDE") for purpose of testing.
+testWithCookies = 0
