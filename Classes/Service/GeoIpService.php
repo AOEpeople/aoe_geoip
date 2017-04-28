@@ -40,6 +40,14 @@ class GeoIpService
 
     const GEO_IP_USER_OVERRIDE = 'GEO_IP_USER_OVERRIDE';
 
+    const DATABASE_DIRECTORY = 'EXT:aoe_geoip/Resources/Private/GeoIpDB';
+
+    const UPDATE_DIRECTORY = '/update';
+
+    const DATABASE_NAME = '/database';
+
+    const DATABASE_EXTENSION = '.mmdb';
+    
     /**
      * @var Reader
      */
@@ -63,15 +71,20 @@ class GeoIpService
 
     /**
      * Returns country that corresponds to the client's IP address.
+     * If it can't fetch country from database, it returns null.
      *
      * @return Country|null
      */
     public function getCountry()
     {
-        $ipAddress = $this->getIpAddress();
-        $record = $this->getReader()->get($ipAddress);
-        if (is_array($record)) {
-            return new Country($record);
+        try {
+            $ipAddress = $this->getIpAddress();
+            $record = $this->getReader()->get($ipAddress);
+            if (is_array($record)) {
+                return new Country($record);
+            }
+        } catch (\Exception $ex) {
+            return null;
         }
         return null;
     }
@@ -84,8 +97,13 @@ class GeoIpService
     private function getReader()
     {
         if (null === $this->reader) {
-            $fileLocation = 'EXT:aoe_geoip/Resources/Private/GeoIpDB/GeoLite2-Country.mmdb';
+            $fileLocation = self::DATABASE_DIRECTORY . self::UPDATE_DIRECTORY .
+                self::DATABASE_NAME . self::DATABASE_EXTENSION;
             $fileLocation = GeneralUtility::getFileAbsFileName($fileLocation);
+            if (!is_file($fileLocation)) {
+                $fileLocation = self::DATABASE_DIRECTORY . self::DATABASE_NAME . self::DATABASE_EXTENSION;
+                $fileLocation = GeneralUtility::getFileAbsFileName($fileLocation);
+            }
             $this->reader = new Reader($fileLocation);
         }
         return $this->reader;

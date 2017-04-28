@@ -1,2 +1,5 @@
 # cat=basic//10; type=boolean; label= Test with cookies: If it's checked, it's allowed to use cookie ("GEO_IP_USER_OVERRIDE") for purpose of testing.
 testWithCookies = 0
+
+# cat=basic//10; type=string; label= Path for MaxMind DB file: Option to set location for mmdb file for purpose of update
+databaseLocation=http://geolite.maxmind.com/download/geoip/database/GeoLite2-Country.tar.gz

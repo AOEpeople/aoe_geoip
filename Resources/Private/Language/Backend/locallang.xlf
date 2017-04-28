@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<xliff version="1.0">
+    <file source-language="en" datatype="plaintext" original="messages" date="2014-06-30T23:43:57Z" product-name="aoe7lts_base">
+        <header/>
+        <body>
+            <trans-unit id="update_maxmind_db_title">
+                <source>Update MaxMind database</source>
+            </trans-unit>
+            <trans-unit id="update_maxmind_db_description">
+                <source>Scheduler for updating MaxMind database</source>
+            </trans-unit>
+        </body>
+    </file>
+</xliff>

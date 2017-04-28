@@ -60,4 +60,9 @@ class ExtensionConfiguration implements SingletonInterface
         }
         return false;
     }
+
+    public function getDatabaseLocation()
+    {
+        return $this->configuration['databaseLocation'];
+    }
 }
