@@ -49,8 +49,8 @@ class GeoIpService
      */
     public function getCountry()
     {
-        $ip = $this->getIp();
-        $record = $this->getReader()->get($ip);
+        $ip_address = $this->getIpAddress();
+        $record = $this->getReader()->get($ip_address);
         if (is_array($record)) {
             return new Country($record);
         }
@@ -76,7 +76,7 @@ class GeoIpService
      *
      * @return string
      */
-    private function getIp()
+    private function getIpAddress()
     {
         if (isset($_COOKIE['TEST_IP'])) {
             return $_COOKIE['TEST_IP'];
