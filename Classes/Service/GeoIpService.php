@@ -1,4 +1,6 @@
 <?php
+namespace Aoe\GeoIp\Service;
+
 /***************************************************************
  *  Copyright notice
  *
@@ -22,13 +24,63 @@
  *
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
-namespace Aoe\GeoIp\Service;
+
+use Aoe\GeoIp\Domain\Model\Country;
+use MaxMind\Db\Reader;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class GeoIpService
  *
  * @package Aoe\GeoIp\Service
  */
-class GeoIpService {
+class GeoIpService
+{
 
+    /**
+     * @var Reader
+     */
+    private $reader = null;
+
+    /**
+     * Returns country that corresponds to the client's IP address.
+     *
+     * @return Country|null
+     */
+    public function getCountry()
+    {
+        $ip = $this->getIp();
+        $record = $this->getReader()->get($ip);
+        if (is_array($record)) {
+            return new Country($record);
+        }
+        return null;
+    }
+
+    /**
+     * Returns an instance of MaxMind's Reader class.
+     *
+     * @return Reader
+     */
+    private function getReader()
+    {
+        if (null === $this->reader) {
+            $fileLocation = GeneralUtility::getFileAbsFileName('EXT:aoe_geoip/Resources/Private/GeoIpDB/GeoLite2-Country.mmdb');
+            $this->reader = new Reader($fileLocation);
+        }
+        return $this->reader;
+    }
+
+    /**
+     * Returns the client's IP address.
+     *
+     * @return string
+     */
+    private function getIp()
+    {
+        if (isset($_COOKIE['TEST_IP'])) {
+            return $_COOKIE['TEST_IP'];
+        }
+        return GeneralUtility::getIndpEnv('REMOTE_ADDR');
+    }
 }
