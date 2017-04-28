@@ -1,5 +1,5 @@
 {
-  "name": "aoe/geoip",
+  "name": "aoe/aoe_geoip",
   "description": "Detect client location",
   "type": "typo3-cms-extension",
   "license": "GPL-3.0",
