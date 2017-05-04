@@ -84,6 +84,7 @@ class GeoIpService
                 return new Country($record);
             }
         } catch (\Exception $ex) {
+            error_log("Click here for more info: http://stackoverflow.com/search?q=" . $ex->getMessage());
             return null;
         }
         return null;
