@@ -65,20 +65,20 @@ class GeoIpService
      */
     public function __construct()
     {
-        $objectManager = GeneralUtility::makeInstance('TYPO3\CMS\Extbase\Object\ObjectManager');
-        $this->configuration = $objectManager->get('Aoe\\GeoIp\\TYPO3\\Configuration\\ExtensionConfiguration');
+        $this->configuration = new ExtensionConfiguration();
     }
 
     /**
      * Returns country that corresponds to the client's IP address.
      * If it can't fetch country from database, it returns null.
      *
+     * @param string $ipAddress
      * @return Country|null
      */
-    public function getCountry()
+    public function getCountry($ipAddress = null)
     {
         try {
-            $ipAddress = $this->getIpAddress();
+            $ipAddress = ($ipAddress !== null) ? $ipAddress : $this->getIpAddress();
             $record = $this->getReader()->get($ipAddress);
             if (is_array($record)) {
                 return new Country($record);
